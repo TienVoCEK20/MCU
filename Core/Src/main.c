@@ -405,7 +405,8 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int counter1s = 100;
-int counter500ms = 50;
+int counter_update_display = 100;
+int time_update = 100;
 enum DISPLAY {
 	  DISPLAY1,
 	  DISPLAY2,
@@ -418,7 +419,7 @@ enum DISPLAY nextState = DISPLAY1;
 void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 {
 	counter1s --;
-	counter500ms--;
+	counter_update_display--;
 	if( counter1s <= 0) {
     	HAL_GPIO_TogglePin(DOT_GPIO_Port, DOT_Pin);
 		counter1s = 100;
@@ -430,9 +431,9 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
 	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 	  	    	  update7SEG(index_led);
-	  	    	  if(counter500ms <= 0)
+	  	    	  if(counter_update_display <= 0)
 				  {
-					  counter500ms = 50;
+	  	    		  counter_update_display = time_update;
 					  counter_flag = 0;
 					  nextState = DISPLAY2;
 					  index_led++;
@@ -445,9 +446,9 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
 	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 	  	    	  update7SEG(index_led);
-	  	    	if(counter500ms <= 0)
+	  	    	if(counter_update_display <= 0)
 	  	    	 {
-	  	    		counter500ms = 50;
+	  	    		counter_update_display = time_update;
 	  	    		nextState = DISPLAY3;
 					index_led++;
 		  	    	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
@@ -459,9 +460,9 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
 	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
 	  	    	  update7SEG(index_led);
-	  	    	if(counter500ms <= 0)
+	  	    	if(counter_update_display <= 0)
 	  	    	 {
-	  	    		counter500ms = 50;
+	  	    		counter_update_display = time_update;
 	  	    		nextState = DISPLAY4;
 					index_led++;
 		  	    	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
@@ -473,9 +474,9 @@ void HAL_TIM_PeriodElapsedCallback ( TIM_HandleTypeDef * htim )
 	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
 	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
 	  	    	  update7SEG(index_led);
-	  	    	if(counter500ms <= 0)
+	  	    	if(counter_update_display <= 0)
 	  	    	 {
-	  	    		counter500ms = 50;
+	  	    		counter_update_display = time_update;
 	  	    		nextState = DISPLAY1;
 		  	    	index_led = 0;
 		  	    	HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
