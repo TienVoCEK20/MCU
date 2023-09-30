@@ -183,7 +183,8 @@ void display7SEG(int num)
 }
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer [4] = {9 , 8 , 7 , 6};
+int led_buffer [4] = {1 , 5 , 0 , 8};
+int hour = 15 , minute = 8 , second = 50;
 void update7SEG (int index) {
     switch (index) {
             case 0:
@@ -202,12 +203,42 @@ void update7SEG (int index) {
             break;
         }
 }
+void updateClockBuffer()
+{
+	int digit_tens;
+	int digit_ones;
+	if(minute <= 9)
+	{
+		led_buffer[2] = 0;
+		led_buffer[3] = minute;
+	}
+	else if(minute >= 10 && minute < 60)
+	{
+		digit_tens = minute/10;
+		digit_ones = minute%10;
+		led_buffer[2] = digit_tens;
+		led_buffer[3] = digit_ones;
+	}
+	if(hour <= 9)
+	{
+		led_buffer[0] = 0;
+		led_buffer[1] = hour;
+	}
+	else if(hour >= 10 && hour < 60)
+	{
+		digit_tens = hour/10;
+		digit_ones = hour%10;
+		led_buffer[0] = digit_tens;
+		led_buffer[1] = digit_ones;
+	}
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 int counter_flag = 0;
 int counter = 50;
+
 /* USER CODE END 0 */
 
 /**
@@ -248,33 +279,20 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-//		  switch (currentState) {
-//		  	    case DISPLAY1:
-//		  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
-//		  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
-//		  	    	  display7SEG(1);
-//					  if(counter_flag)
-//					  {
-//						  counter = 50;
-//						  counter_flag = 0;
-//						  nextState = DISPLAY2;
-//			  	    	  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_SET);
-//					  }
-//		  	    	break;
-//		  	    case DISPLAY2:
-//		  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
-//		  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
-//		  	    	  display7SEG(2);
-//		  	    	if(counter_flag)
-//		  	    	 {
-//						counter = 50;
-//						counter_flag = 0;
-//		  	    		nextState = DISPLAY1;
-//			  	    	  HAL_GPIO_WritePin(LED_RED_GPIO_Port, LED_RED_Pin, GPIO_PIN_RESET);
-//		  	    	 }
-//		  	    	break;
-//	  }
-//	currentState = nextState;
+	second ++;
+	if (second >= 60) {
+		second = 0;
+		minute ++;
+	}
+	if(minute >= 60) {
+		minute = 0;
+		hour ++;
+	}
+	if( hour >=24) {
+		hour = 0;
+	}
+	updateClockBuffer();
+	HAL_Delay(100);
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -405,8 +423,9 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN 4 */
 int counter1s = 100;
-int counter_update_display = 100;
-int time_update = 100;
+
+int time_update = 5;
+int counter_update_display = 5;
 enum DISPLAY {
 	  DISPLAY1,
 	  DISPLAY2,
