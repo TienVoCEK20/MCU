@@ -424,8 +424,8 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 int counter1s = 100;
 
-int time_update = 5;
-int counter_update_display = 5;
+int time_update = 100;
+int counter_update_display = 100;
 enum DISPLAY {
 	  DISPLAY1,
 	  DISPLAY2,
