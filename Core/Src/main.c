@@ -53,20 +53,14 @@ int timer0_counter = 0;
 int timer0_flag = 0;
 int TIMER_CYCLE = 10;
 
+int timer1_counter = 0;
+int timer1_flag = 0;
+
 //timer update
 int hour = 15 , minute = 8 , second = 50;
 const int MAX_LED = 4;
 int index_led = 0;
-int led_buffer [4] = {1 , 2 , 3 , 4};
-
-enum DISPLAY {
-	  DISPLAY1,
-	  DISPLAY2,
-	  DISPLAY3,
-	  DISPLAY4,
-};
-enum DISPLAY currentState = DISPLAY1;
-enum DISPLAY nextState = DISPLAY1;
+int led_buffer [4] = {1 , 5 , 0, 8};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -204,22 +198,56 @@ void display7SEG(int num)
 		turnOnPin(7, GPIO_PIN_RESET);
 	}
 }
-void update7SEG (int index) {
+void turnOnDis (int index) {
     switch (index) {
-            case 0:
-            	display7SEG(led_buffer[0]);
-            break;
             case 1:
-            	display7SEG(led_buffer[1]);
-            break;
+	  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_RESET);
+	  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  	    	  break;
             case 2:
-            	display7SEG(led_buffer[2]);
-            break;
+	  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_RESET);
+	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  	    	  break;
             case 3:
-            	display7SEG(led_buffer[3]);
-            break;
+	  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_RESET);
+	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_SET);
+	  	    	  break;
+            case 4:
+	  	    	  HAL_GPIO_WritePin(EN0_GPIO_Port, EN0_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN1_GPIO_Port, EN1_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN2_GPIO_Port, EN2_Pin, GPIO_PIN_SET);
+	  	    	  HAL_GPIO_WritePin(EN3_GPIO_Port, EN3_Pin, GPIO_PIN_RESET);
+	  	    	  break;
             default :
             break;
+        }
+}
+void update7SEG(int index) {
+    switch(index){
+            case 0:
+            	turnOnDis(1);
+            	display7SEG(led_buffer[0]);
+            	break;
+            case 1:
+            	turnOnDis(2);
+            	display7SEG(led_buffer[1]);
+            	break;
+            case 2:
+            	turnOnDis(3);
+            	display7SEG(led_buffer[2]);
+            	break;
+            case 3:
+            	turnOnDis(4);
+            	display7SEG(led_buffer[3]);
+            	break;
+            default :
+            	break;
         }
 }
 void updateClockBuffer()
@@ -255,15 +283,30 @@ void setTimer0(int duration){
 	timer0_counter = duration / TIMER_CYCLE;
 	timer0_flag = 0;
 }
+void setTimer1(int duration){
+	timer1_counter = duration / TIMER_CYCLE;
+	timer1_flag = 0;
+}
+
 void timer_run () {
 	if(timer0_counter > 0) {
 		timer0_counter --;
-	if(timer0_counter == 0)
+	}
+	if(timer0_counter == 0) {
 		timer0_flag = 1;
 	}
+
+	if(timer1_counter > 0) {
+		timer1_counter --;
+	}
+	if(timer1_counter == 0)
+	{
+		timer1_flag = 1;
+	}
 }
+
 void toggleRedLed() {
-	HAL_GPIO_TogglePin(LED_RED_GPIO_Port , LED_RED_Pin);
+	HAL_GPIO_TogglePin(DOT_GPIO_Port , DOT_Pin);
 }
 /* USER CODE END PFP */
 
@@ -308,6 +351,7 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   setTimer0(1000);
+  setTimer1(200);
   while (1)
   {
 	if(timer0_flag == 1) {
@@ -320,13 +364,23 @@ int main(void)
 			minute = 0;
 			hour ++;
 		}
-		if( hour >=24) {
+		if( hour >= 24) {
 			hour = 0;
 		}
 		updateClockBuffer();
 		toggleRedLed();
-		setTimer0(1000);
+		setTimer0(10);
 	}
+	  if(timer1_flag == 1)
+	  {
+		  update7SEG(index_led);
+		  index_led++;
+		  if(index_led == MAX_LED)
+		  {
+			  index_led = 0;
+		  }
+		  setTimer1(200);
+	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
