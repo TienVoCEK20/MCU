@@ -457,6 +457,15 @@ void toggleRedLed() {
 	HAL_GPIO_TogglePin(DOT_GPIO_Port , DOT_Pin);
 }
 
+void shiftCharacterToTop()
+{
+    for (int i = 0; i < MAX_LED_MATRIX; i++)
+    {
+    	matrix_buffer[i] = matrix_buffer[i + 1];
+    }
+    matrix_buffer[MAX_LED_MATRIX - 1] = matrix_buffer[0];
+}
+
 // Initialize the matrix
 
 /* USER CODE END PFP */
@@ -545,6 +554,7 @@ int main(void)
 		  if(index_led_matrix == MAX_LED_MATRIX)
 		  {
 			  index_led = 0;
+			  shiftCharacterLeft();
 		  }
 		  setTimer2(100);
 	  }
