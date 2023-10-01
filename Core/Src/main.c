@@ -467,15 +467,11 @@ void shiftCharacterToTop()
 }
 
 void shiftCharacterLeftWrap(uint8_t* pattern) {
-    uint8_t lsb = pattern[0] & 0x01; // Least significant bit from the first byte
-
     for (int i = 0; i < 8; i++) {
         uint8_t msb = (pattern[i] & 0x01) << 7; // Most significant bit of the current byte
 
         // Shift the pattern to the right
         pattern[i] = (pattern[i] >> 1) | msb;
-
-        msb = lsb;
     }
 }
 // Initialize the matrix
