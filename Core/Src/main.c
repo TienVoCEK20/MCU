@@ -466,6 +466,18 @@ void shiftCharacterToTop()
     matrix_buffer[MAX_LED_MATRIX - 1] = matrix_buffer[0];
 }
 
+void shiftCharacterLeftWrap(uint8_t* pattern) {
+    uint8_t lsb = pattern[0] & 0x01; // Least significant bit from the first byte
+
+    for (int i = 0; i < 8; i++) {
+        uint8_t msb = (pattern[i] & 0x01) << 7; // Most significant bit of the current byte
+
+        // Shift the pattern to the right
+        pattern[i] = (pattern[i] >> 1) | msb;
+
+        msb = lsb;
+    }
+}
 // Initialize the matrix
 
 /* USER CODE END PFP */
@@ -554,7 +566,7 @@ int main(void)
 		  if(index_led_matrix == MAX_LED_MATRIX)
 		  {
 			  index_led = 0;
-			  shiftCharacterLeft();
+			  shiftCharacterLeftWrap(matrix_buffer);
 		  }
 		  setTimer2(100);
 	  }
