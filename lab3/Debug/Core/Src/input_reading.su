@@ -1,0 +1,6 @@
+input_reading.c:33:6:fsm_for_input_processing_0	8	static
+input_reading.c:66:6:fsm_for_input_processing_1	8	static
+input_reading.c:91:6:fsm_for_input_processing_2	8	static
+input_reading.c:118:6:button_reading	24	static
+input_reading.c:154:15:is_button_pressed	16	static
+input_reading.c:159:15:is_button_pressed_1s	16	static
