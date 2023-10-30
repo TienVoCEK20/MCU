@@ -29,20 +29,12 @@ enum ButtonState{BUTTON_RELEASED, BUTTON_PRESSED, BUTTON_PRESSED_MORE_THAN_1_SEC
 enum ButtonState buttonState0 = BUTTON_RELEASED;
 enum ButtonState buttonState1 = BUTTON_RELEASED;
 enum ButtonState buttonState2 = BUTTON_RELEASED;
-int init = 1;
 void fsm_for_input_processing_0(void){
 	switch(buttonState0){
 	case BUTTON_RELEASED:
 		if(is_button_pressed(0)){
 			buttonState0 = BUTTON_PRESSED;
-			if(init == 1)
-			{
-				init = 0;
-			}
-			else
-			{
-				changing_mode_flag = 1;
-			}
+			changing_mode_flag = 1;
 		}
 		break;
 	case BUTTON_PRESSED:

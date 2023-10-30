@@ -70,8 +70,8 @@ int red_light = 5;
 int green_light = 3;
 int yellow_light = 2;
 
-int counter = 3 + 1;
-int light1 = 5 + 1;
+int counter = 3;
+int light1 = 5;
 int light2 = 2;
 
 int temp_change = 0;
@@ -617,8 +617,8 @@ void save_yellow_value()
 void save_green_value()
 {
 	green_light = temp_change;
-	counter = green_light + 1;
-	light1 = red_light + 1;
+	counter = green_light;
+	light1 = red_light;
 	light2 = red_light - green_light;
 	current_traffic_state = RED1_GREEN2;
 	next_traffic_state = RED1_GREEN2;
@@ -866,9 +866,9 @@ void system_running()
 			  	    	break;
 		  }
 		currentState = nextState;
-		  fsm_for_input_processing_0();
-		  fsm_for_input_processing_1();
-		  fsm_for_input_processing_2();
+		fsm_for_input_processing_0();
+		fsm_for_input_processing_1();
+		fsm_for_input_processing_2();
 }
 
 /* USER CODE END 0 */
